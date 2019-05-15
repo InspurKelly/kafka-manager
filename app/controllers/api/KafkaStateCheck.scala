@@ -40,7 +40,7 @@ class KafkaStateCheck (val cc: ControllerComponents, val kafkaManagerContext: Ka
     kafkaManager.getBrokerList(c).map { errorOrBrokerList =>
       errorOrBrokerList.fold(
         error => BadRequest(Json.obj("msg" -> error.msg)),
-        brokerList => Ok(Json.obj("brokers" -> brokerList.list.map(bi => bi.id).sorted)).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+        brokerList => Ok(Json.obj("brokers" -> brokerList.list.map(bi => bi.id).sorted))
       )
     }
   }
@@ -48,7 +48,7 @@ class KafkaStateCheck (val cc: ControllerComponents, val kafkaManagerContext: Ka
     kafkaManager.getBrokerList(c).map { errorOrBrokerList =>
       errorOrBrokerList.fold(
         error => BadRequest(Json.obj("msg" -> error.msg)),
-        brokerList => Ok(Json.obj("brokers" -> brokerList.list)).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+        brokerList => Ok(Json.obj("brokers" -> brokerList.list))
       )
     }
   }
@@ -57,7 +57,7 @@ class KafkaStateCheck (val cc: ControllerComponents, val kafkaManagerContext: Ka
     kafkaManager.getTopicList(c).map { errorOrTopicList =>
       errorOrTopicList.fold(
         error => BadRequest(Json.obj("msg" -> error.msg)),
-        topicList => Ok(Json.obj("topics" -> topicList.list.sorted)).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+        topicList => Ok(Json.obj("topics" -> topicList.list.sorted))
       )
     }
   }
@@ -67,7 +67,7 @@ class KafkaStateCheck (val cc: ControllerComponents, val kafkaManagerContext: Ka
     kafkaManager.getTopicListExtended(c).map { errorOrTopicListExtended =>
       errorOrTopicListExtended.fold(
         error => BadRequest(Json.obj("msg" -> error.msg)),
-        topicListExtended => Ok(Serialization.writePretty("topicIdentities" -> topicListExtended.list.flatMap(_._2).map(toJSON(_)))).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+        topicListExtended => Ok(Serialization.writePretty("topicIdentities" -> topicListExtended.list.flatMap(_._2).map(toJSON(_))))
       )
     }
   }
@@ -77,7 +77,7 @@ class KafkaStateCheck (val cc: ControllerComponents, val kafkaManagerContext: Ka
     kafkaManager.getClusterList.map { errorOrClusterList =>
       errorOrClusterList.fold(
         error => BadRequest(Json.obj("msg" -> error.msg)),
-        clusterList => Ok(Serialization.writePretty("clusters" -> errorOrClusterList.toOption)).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+        clusterList => Ok(Serialization.writePretty("clusters" -> errorOrClusterList.toOption))
       )
     }
   }
@@ -86,7 +86,7 @@ class KafkaStateCheck (val cc: ControllerComponents, val kafkaManagerContext: Ka
     kafkaManager.getTopicIdentity(c, t).map { errorOrTopicIdentity =>
       errorOrTopicIdentity.fold(
         error => BadRequest(Json.obj("msg" -> error.msg)),
-        topicIdentity => Ok(Json.obj("topic" -> t, "underReplicatedPartitions" -> topicIdentity.partitionsIdentity.filter(_._2.isUnderReplicated).map{case (num, pi) => pi.partNum})).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+        topicIdentity => Ok(Json.obj("topic" -> t, "underReplicatedPartitions" -> topicIdentity.partitionsIdentity.filter(_._2.isUnderReplicated).map{case (num, pi) => pi.partNum}))
       )
     }
   }
@@ -95,7 +95,7 @@ class KafkaStateCheck (val cc: ControllerComponents, val kafkaManagerContext: Ka
     kafkaManager.getTopicIdentity(c, t).map { errorOrTopicIdentity =>
       errorOrTopicIdentity.fold(
         error => BadRequest(Json.obj("msg" -> error.msg)),
-        topicIdentity => Ok(Json.obj("topic" -> t, "unavailablePartitions" -> topicIdentity.partitionsIdentity.filter(_._2.isr.isEmpty).map { case (num, pi) => pi.partNum })).withHeaders("X-Frame-Options" -> "SAMEORIGIN"))
+        topicIdentity => Ok(Json.obj("topic" -> t, "unavailablePartitions" -> topicIdentity.partitionsIdentity.filter(_._2.isr.isEmpty).map { case (num, pi) => pi.partNum })))
     }
   }
 
@@ -104,7 +104,7 @@ class KafkaStateCheck (val cc: ControllerComponents, val kafkaManagerContext: Ka
       errorOrTopicSummary.fold(
         error => BadRequest(Json.obj("msg" -> error.msg)),
         topicSummary => {
-          Ok(topicSummary).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+          Ok(topicSummary)
         })
     }
   }
@@ -129,7 +129,7 @@ class KafkaStateCheck (val cc: ControllerComponents, val kafkaManagerContext: Ka
         error =>
           Future.successful(BadRequest(Json.obj("msg" -> error.msg))),
         consumedTopicSummary => getGroupSummary(cluster, consumer, consumedTopicSummary.topicMap.keys, consumerType).map { topics =>
-          Ok(JsObject(topics)).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+          Ok(JsObject(topics))
         })
     }
   }
@@ -156,7 +156,7 @@ class KafkaStateCheck (val cc: ControllerComponents, val kafkaManagerContext: Ka
                   "topics" -> consumerIdentity.map(_.topicMap.keys),
                   "lags" -> consumerIdentity.map(_.topicMap.mapValues(_.totalLag))
                 )
-            })).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+            }))
         )
     }
   }
