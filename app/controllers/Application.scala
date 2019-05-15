@@ -22,7 +22,7 @@ class Application(val cc: ControllerComponents, kafkaManagerContext: KafkaManage
 
   def index = Action.async { implicit request: RequestHeader =>
     kafkaManager.getClusterList.map { errorOrClusterList =>
-      Ok(views.html.index(errorOrClusterList)).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+      Ok(views.html.index(errorOrClusterList))
     }
   }
 }
