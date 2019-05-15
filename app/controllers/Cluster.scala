@@ -194,25 +194,25 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
 
   def cluster(c: String) = Action.async { implicit request: RequestHeader =>
     kafkaManager.getClusterView(c).map { errorOrClusterView =>
-      Ok(views.html.cluster.clusterView(c,errorOrClusterView)).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+      Ok(views.html.cluster.clusterView(c,errorOrClusterView))
     }
   }
 
   def brokers(c: String) = Action.async { implicit request: RequestHeader =>
     kafkaManager.getBrokerList(c).map { errorOrBrokerList =>
-      Ok(views.html.broker.brokerList(c,errorOrBrokerList)).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+      Ok(views.html.broker.brokerList(c,errorOrBrokerList))
     }
   }
 
   def broker(c: String, b: Int) = Action.async { implicit request: RequestHeader =>
     kafkaManager.getBrokerView(c,b).map { errorOrBrokerView =>
-      Ok(views.html.broker.brokerView(c,b,errorOrBrokerView)).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+      Ok(views.html.broker.brokerView(c,b,errorOrBrokerView))
     }
   }
 
   def addCluster = Action.async { implicit request: RequestHeader =>
     featureGate(KMClusterManagerFeature) {
-      Future.successful(Ok(views.html.cluster.addCluster(clusterConfigForm.fill(defaultClusterConfig))).withHeaders("X-Frame-Options" -> "SAMEORIGIN"))
+      Future.successful(Ok(views.html.cluster.addCluster(clusterConfigForm.fill(defaultClusterConfig))))
     }
   }
 
@@ -240,7 +240,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
             cc.saslMechanism.map(_.stringId),
             cc.jaasConfig
           ))
-        })).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+        }))
       }
     }
 
@@ -275,7 +275,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
               "Add Cluster",
               FollowLink("Go to cluster view.",routes.Cluster.cluster(clusterConfig.name).toString()),
               FollowLink("Try again.",routes.Cluster.addCluster().toString())
-            )).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+            ))
           }
         }
       )
@@ -296,7 +296,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
                 "Enable Cluster",
                 FollowLink("Go to cluster list.", routes.Application.index().toString()),
                 FollowLink("Back to cluster list.", routes.Application.index().toString())
-              )).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+              ))
             }
           case Disable =>
             kafkaManager.disableCluster(c).map { errorOrSuccess =>
@@ -307,7 +307,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
                 "Disable Cluster",
                 FollowLink("Back to cluster list.", routes.Application.index().toString()),
                 FollowLink("Back to cluster list.", routes.Application.index().toString())
-              )).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+              ))
             }
           case Delete =>
             kafkaManager.deleteCluster(c).map { errorOrSuccess =>
@@ -318,7 +318,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
                 "Delete Cluster",
                 FollowLink("Back to cluster list.", routes.Application.index().toString()),
                 FollowLink("Back to cluster list.", routes.Application.index().toString())
-              )).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+              ))
             }
           case Update =>
             kafkaManager.updateCluster(
@@ -346,7 +346,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
                 "Update Cluster",
                 FollowLink("Go to cluster view.", routes.Cluster.cluster(clusterOperation.clusterConfig.name).toString()),
                 FollowLink("Try again.", routes.Cluster.updateCluster(c).toString())
-              )).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+              ))
             }
           case Unknown(opString) =>
             Future.successful(Ok(views.html.common.resultOfCommand(
@@ -356,7 +356,7 @@ class Cluster (val cc: ControllerComponents, val kafkaManagerContext: KafkaManag
               "Unknown Cluster Operation",
               FollowLink("Back to cluster list.", routes.Application.index().toString()),
               FollowLink("Back to cluster list.", routes.Application.index().toString())
-            )).withHeaders("X-Frame-Options" -> "SAMEORIGIN"))
+            )))
         }
       )
     }
