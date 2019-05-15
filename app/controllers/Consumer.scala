@@ -22,19 +22,19 @@ class Consumer (val cc: ControllerComponents, val kafkaManagerContext: KafkaMana
 
   def consumers(cluster: String) = Action.async { implicit request: RequestHeader =>
     kafkaManager.getConsumerListExtended(cluster).map { errorOrConsumerList =>
-      Ok(views.html.consumer.consumerList(cluster, errorOrConsumerList)).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+      Ok(views.html.consumer.consumerList(cluster, errorOrConsumerList))
     }
   }
 
   def consumer(cluster: String, consumerGroup: String, consumerType: String) = Action.async { implicit request: RequestHeader =>
     kafkaManager.getConsumerIdentity(cluster,consumerGroup, consumerType).map { errorOrConsumerIdentity =>
-      Ok(views.html.consumer.consumerView(cluster,consumerGroup,errorOrConsumerIdentity)).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+      Ok(views.html.consumer.consumerView(cluster,consumerGroup,errorOrConsumerIdentity))
     }
   }
 
   def consumerAndTopic(cluster: String, consumerGroup: String, topic: String, consumerType: String) = Action.async { implicit request: RequestHeader =>
     kafkaManager.getConsumedTopicState(cluster,consumerGroup,topic, consumerType).map { errorOrConsumedTopicState =>
-      Ok(views.html.consumer.consumedTopicView(cluster,consumerGroup,consumerType,topic,errorOrConsumedTopicState)).withHeaders("X-Frame-Options" -> "SAMEORIGIN")
+      Ok(views.html.consumer.consumedTopicView(cluster,consumerGroup,consumerType,topic,errorOrConsumedTopicState))
     }
   }
 }
